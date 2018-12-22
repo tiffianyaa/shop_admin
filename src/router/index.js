@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import Login from 'components/Login'
 import Home from 'components/Home'
+import User from 'components/User'
 
 Vue.use(Router)
 // 下面需要用到路由,存储一下
@@ -17,7 +18,13 @@ const router = new Router({
     },
     {
       path: '/home',
-      component: Home
+      component: Home,
+      children: [
+        {
+          path: '/user',
+          component: User
+        }
+      ]
     }
   ]
 })
