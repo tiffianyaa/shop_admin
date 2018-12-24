@@ -3,6 +3,8 @@ import Router from 'vue-router'
 import Login from 'components/Login'
 import Home from 'components/Home'
 import User from 'components/User'
+import Rights from 'components/Rights'
+import Roles from 'components/Roles'
 
 Vue.use(Router)
 // 下面需要用到路由,存储一下
@@ -23,6 +25,14 @@ const router = new Router({
         {
           path: '/user',
           component: User
+        },
+        {
+          path: '/rights',
+          component: Rights
+        },
+        {
+          path: '/roles',
+          component: Roles
         }
       ]
     }

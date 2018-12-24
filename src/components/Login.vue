@@ -14,7 +14,7 @@
         <el-input v-model="form.username"></el-input>
       </el-form-item>
       <el-form-item label="密码" prop="password">
-        <el-input v-model="form.password"></el-input>
+        <el-input v-model="form.password" @keyup.enter.native="login"></el-input>
       </el-form-item>
       <el-form-item>
         <!-- 点击登录按钮的时候需要重新校验整个表单 -->
@@ -27,7 +27,6 @@
 
 <script>
 // 引入axios模块
-import axios from 'axios'
 export default {
   data() {
     return {
@@ -54,33 +53,32 @@ export default {
     },
     // 校验整个表单,(去下面表格中的Form Methods中找)
     login() {
-      this.$refs.form.validate(valid => {
-        if (valid) {
-          // 校验通过，发生ajax请求
-          axios({
-            url: 'http://localhost:8888/api/private/v1/login',
-            method: 'post',
-            data: this.form
-          }).then(res => {
-            if (res.data.meta.status === 200) {
-              this.$message.success('登录成功')
-              // 存储token
-              localStorage.setItem('token', res.data.data.token)
-              // 跳转到home组件
-              this.$router.push('/home')
-            } else {
-              // 登陆失败，提示错误消息 notice里面
-              // $message,弹出消息提示框
-              this.$message({
-                message: res.data.meta.msg,
-                type: 'error',
-                duration: 1000
-              })
-            }
-          })
+      this.$refs.form.validate(async valid => {
+        if (!valid) return false
+        // 校验通过，发生ajax请求
+        let res = await this.axios({
+          url: 'login',
+          method: 'post',
+          data: this.form
+        })
+        let {
+          data: { token },
+          meta: { status, msg }
+        } = res
+        if (status === 200) {
+          this.$message.success('登录成功')
+          // 存储token
+          localStorage.setItem('token', token)
+          // 跳转到home组件
+          this.$router.push('/home')
         } else {
-          // 校验未通过
-          return false
+          // 登陆失败，提示错误消息 notice里面
+          // $message,弹出消息提示框
+          this.$message({
+            message: msg,
+            type: 'error',
+            duration: 1000
+          })
         }
       })
     }

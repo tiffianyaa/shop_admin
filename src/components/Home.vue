@@ -36,11 +36,11 @@
               <i class="el-icon-location"></i>
               <span>权限管理</span>
             </template>
-            <el-menu-item index="2-1">
+            <el-menu-item index="roles">
               <i class="el-icon-menu"></i>
               <span slot="title">角色列表</span>
             </el-menu-item>
-            <el-menu-item index="2-2">
+            <el-menu-item index="/rights">
               <i class="el-icon-menu"></i>
               <span slot="title">权限列表</span>
             </el-menu-item>
@@ -57,20 +57,19 @@
 <script>
 export default {
   methods: {
-    logout() {
-      this.$confirm('您确定要退出登录吗?', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      })
-        .then(() => {
-          localStorage.removeItem('token')
-          this.$router.push('/login')
-          this.$message.success('退出成功!')
+    async logout() {
+      try {
+        await this.$confirm('您确定要退出登录吗?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
         })
-        .catch(() => {
-          this.$message.info('已取消退出')
-        })
+        localStorage.removeItem('token')
+        this.$router.push('/login')
+        this.$message.success('退出成功!')
+      } catch (e) {
+        this.$message.info('已取消退出')
+      }
     }
   }
 }
